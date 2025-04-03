@@ -1,17 +1,3 @@
-// Global settings for the calculator
-export interface GlobalSettings {
-  workload: "imdb" | "rdbms" | "aiml" | "virtualization" | "other"
-  amortizationPeriod: string
-  currency: string
-}
-
-export const defaultGlobalSettings: GlobalSettings = {
-  workload: "imdb",
-  amortizationPeriod: "3",
-  currency: "$",
-}
-
-// Server configuration
 export interface Configuration {
   id: string
   name: string
@@ -19,46 +5,50 @@ export interface Configuration {
   serverCount: number
   cpu: {
     sockets: number
-    tier: "entry" | "mid" | "high"
+    tier: string
     cores: number
   }
   dram: {
     capacity: number
-    type: "DDR4" | "DDR5"
+    type: string
     speed: string
   }
-  cxlMemory: {
+  cxl: {
     enabled: boolean
     capacity: number
-    tier: "standard" | "high-perf"
+    tier: string
   }
   storage: {
-    tier: "entry" | "mid" | "high"
+    tier: string
     capacity: number
   }
   networking: {
     speed: string
   }
-  rackUnits: number
   notes: string
 }
 
-// Calculation results
-export interface ConfigResult {
+export interface TCOResult {
+  name: string
+  serverCount: number
+  dramCapacity: number
+  cxlCapacity: number | null
   capex: number
   annualOpex: number
-  totalTco: number
-  performanceMetrics: {
-    upliftPercentage: number
-    qpsImprovement?: number
-    vmDensityIncrease?: number
-    trainingTimeReduction?: number
-  }
+  totalTCO: number
+  tcoSavings: number
+  tcoSavingsPercent: number
+  performanceUplift: number
+  annualPowerKwh: number
+  annualPowerCost: number
+  rackUnits: number
 }
 
-export interface CalculationResults {
-  configResults: {
-    [configId: string]: ConfigResult
-  }
+export interface TCOResults {
+  baseline: TCOResult
+  comparisons: {
+    config: Configuration
+    results: TCOResult
+  }[]
 }
 
